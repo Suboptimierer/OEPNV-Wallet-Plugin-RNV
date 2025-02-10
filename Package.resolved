@@ -1,5 +1,5 @@
 {
-  "originHash" : "9e71679f9d9d68beeee0e61d5bf82c180cf99dfd18f76c5bb89053f788479267",
+  "originHash" : "6e0a82e4282471070683423129b2695d66e0055e5ac55b881c8d04db7f6acc6c",
   "pins" : [
     {
       "identity" : "oepnv-wallet-plugin-api",
@@ -7,7 +7,7 @@
       "location" : "/Users/jonas/Entwicklung/Xcode/OEPNV-Wallet-Plugin-API",
       "state" : {
         "branch" : "main",
-        "revision" : "77ba09ea6100534e74b611524e0d06601521e666"
+        "revision" : "5b474e75fd05756320ce2fb20eba298ab28a0023"
       }
     }
   ],
