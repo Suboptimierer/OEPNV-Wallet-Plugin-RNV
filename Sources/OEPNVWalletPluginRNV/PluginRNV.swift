@@ -28,3 +28,5 @@ public struct PluginRNV: OEPNVWalletPlugin {
     )
     
 }
+
+// TODO: Weitere Funktionalitäten über Extensions in separaten Files...
