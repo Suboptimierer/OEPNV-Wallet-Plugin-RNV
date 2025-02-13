@@ -23,7 +23,7 @@ public struct PluginRNV: OEPNVWalletPlugin {
             URL(string: "https://abo.rnv-online.de")!,
             URL(string: "https://apps.apple.com/de/app/rnv-vrn-handy-ticket/id1259806111")!
         ],
-        associationAuthType: OEPNVWalletPluginAuthType.emailAndPassword,
+        associationAuthType: OEPNVWalletPluginAuthType.emailPassword,
         supportedTickets: ["Deutschlandticket", "D-Ticket JugendBW"]
     )
     
