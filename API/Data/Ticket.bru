@@ -1,0 +1,54 @@
+meta {
+  name: Ticket
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://tickets.rnv-online.de/index.php/mobileService/ticket
+  body: json
+  auth: inherit
+}
+
+headers {
+  content-type: application/json
+  host: tickets.rnv-online.de
+  user-agent: RNV AND/3.22.0/2022.03/rnv-live (Google komodo - 'Pixel 9'; Android; 15, SDK: 35)
+  x-api-signature: eb439e9e995550b080f0c048b7fd315018328a72528b2995e7f1af169bcc3b70740419daa51c8d6d35344d2d3fd01feb55291f72baff7bd68e368c328d7b20c2
+  x-eos-date: Sat, 29 Mar 2025 20:52:00 GMT
+  device-identifier: abc123
+  authorization: TICKeos {{auth-token}}
+}
+
+body:json {
+  {"tickets":["<ticket-id>"],"details":true,"provide_aztec_content":false,"parameters":false}
+}
+
+docs {
+  **Aufbau der X-API-Signatur-Rohdaten für diesen Endpunkt:**  
+  ```
+  <body-hash>|tickets.rnv-online.de|443|/index.php/mobileService/ticket|Sat, 29 Mar 2025 18:33:49 GMT|application/json|TICKeos <token>|||RNV AND/3.22.0/2022.03/rnv-live (Google komodo - 'Pixel 9'; Android; 15, SDK: 35)
+  ```
+  
+  **Der Response des Endpunkts ist ein extrem großes JSON. Der Scan-Code kann wie folgt ausgelesen werden:**  
+  ```
+  const fs = require("fs");
+  const fileContent = fs.readFileSync("response.json", "utf8");
+  
+  const content = JSON.parse(fileContent);
+  const ticket = content.tickets["<ticket-id>"];
+  const template = JSON.parse(ticket.template);
+  const pages = template.content.pages;
+  const secondPage = pages[1];
+  
+  const marker = "<img class='barcode' style='z-index: 100;' src='data:image/jpg;base64,";
+  const startIndex = secondPage.indexOf(marker);
+  const urlStart = startIndex + marker.length;
+  const urlEnd = secondPage.indexOf("'", urlStart);
+  const code = secondPage.substring(urlStart, urlEnd);
+  
+  fs.writeFileSync("code.txt", code);
+  ```
+  
+  Die im Request-Body benötigte Ticket-ID kann über den Endpunkt Sync ermittelt werden.
+}

@@ -1,0 +1,32 @@
+meta {
+  name: Logout
+  type: http
+  seq: 2
+}
+
+post {
+  url: https://tickets.rnv-online.de/index.php/mobileService/logout
+  body: json
+  auth: none
+}
+
+headers {
+  content-type: application/json
+  host: tickets.rnv-online.de
+  user-agent: RNV AND/3.22.0/2022.03/rnv-live (Google komodo - 'Pixel 9'; Android; 15, SDK: 35)
+  x-api-signature: e86607ef24038a470e9ef9296bfccfbdd97966ecaa20c26c4be0e657fc5960bc8c09b5843edb933f4f20e7937d6fca3d1bba65d8cd1ac724c4813ff8a507629b
+  x-eos-date: Sat, 29 Mar 2025 20:25:00 GMT
+  device-identifier: abc123
+  authorization: TICKeos {{auth-token}}
+}
+
+body:json {
+  {}
+}
+
+docs {
+  **Aufbau der X-API-Signatur-Rohdaten für diesen Endpunkt:**  
+  ```
+  <body-hash>|tickets.rnv-online.de|443|/index.php/mobileService/logout|Sat, 29 Mar 2025 12:43:26 GMT|application/json|TICKeos <token>|||RNV AND/3.22.0/2022.03/rnv-live (Google komodo - 'Pixel 9'; Android; 15, SDK: 35)
+  ```
+}

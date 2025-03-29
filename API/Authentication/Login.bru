@@ -13,16 +13,24 @@ post {
 headers {
   content-type: application/json
   host: tickets.rnv-online.de
-  user-agent: RNV AND/3.22.0/2022.03/rnv-live (Google emu64a - 'sdk_gphone64_arm64'; Android; 13, SDK: 33)
-  x-api-signature: 384af9c3614e1a627cd0a7850325e8a0bba0f4225921642133945fc193b263492d9c3d3b473ac09eecadf99ed2c913543c4080b22fe9e1ab91ecbf47d3e2d1c7
-  x-eos-date: Fri, 28 Mar 2025 23:59:00 GMT
+  user-agent: RNV AND/3.22.0/2022.03/rnv-live (Google komodo - 'Pixel 9'; Android; 15, SDK: 35)
+  x-api-signature: 8fb9628efed8c7bd85cc5fb3051aec3a115644088ed1d0281c2fd61411e37a10c8af260146632500409f63802f8f2739447754e0eedea5c58a5d94493052761b
+  x-eos-date: Sat, 29 Mar 2025 20:17:00 GMT
   device-identifier: abc123
 }
 
 body:json {
-  {"credentials": {"password": "{{password}}", "username": "{{email}}"}}
+  {"credentials":{"password":"{{password}}","username":"{{email}}"}}
 }
 
 docs {
-  body-hash|tickets.rnv-online.de|443|/index.php/mobileService/login|Fri, 28 Mar 2025 23:16:03 GMT|application/json||||RNV AND/3.22.0/2022.03/rnv-live (Google emu64a - 'sdk_gphone64_arm64'; Android; 13, SDK: 33)
+  **Aufbau der X-API-Signatur-Rohdaten für diesen Endpunkt:**  
+  ```
+  <body-hash>|tickets.rnv-online.de|443|/index.php/mobileService/login|Fri, 28 Mar 2025 23:16:03 GMT|application/json||||RNV AND/3.22.0/2022.03/rnv-live (Google komodo - 'Pixel 9'; Android; 15, SDK: 35)
+  ```
+  
+  **Bei diesem Endpunkt kommt ein TICKeos-Token zurück, der als Authentifizierung für nachfolgende Anfragen dient. Dieser muss in der X-API-Signature und als Authorization Header bei allen anderen Endpunkten mitgesendet werden. Wichtig ist, dass folgender Aufbau ohne Zeilenumbrüche eingehalten wird:**
+  ```
+  TICKeos <token>
+  ```
 }

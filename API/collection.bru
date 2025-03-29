@@ -1,0 +1,36 @@
+docs {
+  Damit die RNV-API Anfragen beantwortet, muss bei jedem Request ein X-API-Signature Header mitgesendet werden. Durch Reverse-Engineering konnte der interne Aufbau rekonstruiert werden. Folgende Werte werden durch | miteinander verbunden:
+  
+  ```
+  [Body-Hash (HMACSHA512)]|
+  [Host]|
+  [Port]|
+  [Path]|
+  [X-Eos-Date]|
+  [Content-Type]|
+  [Authorization]|
+  [X-TICKeos-Anonymous]|
+  [X-EOS-SSO]|
+  [User-Agent]
+  ```
+  
+  Anschließend wird der konkatenierte String erneut mit HMACSHA512 gehasht. Nachfolgend ist ein reales Beispiel dargestellt:
+  
+  ```
+  19ba6c76b4e04dc5b8604c90e5cc397b4560e5dfbf0c418bafc33eee1ecb41cfd20b3b389d85033ebde21dc1177acd8a0c4b01e81d905b33bc65f739796d3e5e|tickets.rnv-online.de|443|/index.php/mobileService/product|Sat, 29 Mar 2025 18:33:27 GMT|application/json||||RNV AND/3.22.0/2022.03/rnv-live (Google emu64a - 'sdk_gphone64_arm64'; Android; 13, SDK: 33)
+  
+  => X-API-Signature: c280297706fd5e55a99de268e6c9504e3ea34ccb40930be01d868ded537806f0f923db9d608984762f771b5209dee372fecb24cc8a2f340f8bf1cddca412e187
+  ```
+  
+  **Wichtig:** Zum Testen ist in /Tools eine Datei x-api-signature-generator.playground enthalten. Sie dient dazu, schnell und einfach funktionsfähige X-API-Signature Header zu erzeugen, indem die Eingabewerte angepasst werden.
+  
+  Zusätzlich wird bei jeder Anfrage an die RNV-API ein Device-Identifier Header benötigt. Dies kann eine beliebige Zeichenkette sein, sie sollte bei zusammenhängen Anfragen aber gleich bleiben. Alle weiteren Header in den Bruno-Requests müssen zwingend so gesetzt werden.
+  
+  Wenn folgende Fehlermeldung von der RNV-API zurückgegeben wird, deutet das auf Probleme mit dem X-API-Signature Header hin!  
+  ```
+  {
+    "message": "Die Anfrage-Nachricht war fehlerhaft aufgebaut.[...]",
+    "internal_message": "preg_replace(): Argument #3 ($subject) must be of type array|string, int given"
+  }
+  ```
+}
