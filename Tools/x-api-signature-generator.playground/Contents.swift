@@ -3,7 +3,7 @@ import CryptoKit
 
 
 // MARK: - Gleich für jeden Endpunkt
-let secret = ""
+let secret = "6xVKJuwLEwFhAwRSz2Ed"
 let host = "tickets.rnv-online.de"
 let port = "443"
 let contentType = "application/json"
