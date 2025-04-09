@@ -82,7 +82,7 @@ extension PluginRNV {
                 (name: "authorization", value: auth),
             ],
             url: "https://tickets.rnv-online.de/index.php/mobileService/ticket",
-            body: ticketRequestBodyJSON,
+            body: ticketRequestBodyJSON
         )
         
         let clientResponse = try await client.send(request: clientRequest)

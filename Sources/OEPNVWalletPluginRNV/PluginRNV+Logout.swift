@@ -46,7 +46,7 @@ extension PluginRNV {
                 (name: "authorization", value: auth),
             ],
             url: "https://tickets.rnv-online.de/index.php/mobileService/logout",
-            body: logoutRequestBodyJSON,
+            body: logoutRequestBodyJSON
         )
         
         let clientResponse = try await client.send(request: clientRequest)

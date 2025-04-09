@@ -65,7 +65,7 @@ extension PluginRNV {
                 (name: "x-api-signature", value: xApiSignature),
             ],
             url: "https://tickets.rnv-online.de/index.php/mobileService/login",
-            body: loginRequestBodyJSON,
+            body: loginRequestBodyJSON
         )
         
         let clientResponse = try await client.send(request: clientRequest)
