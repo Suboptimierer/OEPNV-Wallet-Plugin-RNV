@@ -63,7 +63,6 @@ public struct PluginRNV: OEPNVWalletPlugin {
                     type: ticketData.type,
                     validFrom: ticketData.validFrom,
                     validUntil: ticketData.validUntil,
-                    updateAvailable: ticketData.validUntil,
                     holder: ticketData.holder,
                     scanCode: ticketData.scanCode
                 ))
