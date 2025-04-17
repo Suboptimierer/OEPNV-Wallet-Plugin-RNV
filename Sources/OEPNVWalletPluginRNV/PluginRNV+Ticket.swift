@@ -95,7 +95,7 @@ extension PluginRNV {
             if let error = try? JSONDecoder().decode(APIError.self, from: ticketResponseBody) {
                 throw OEPNVWalletPluginError.authenticationFailed(description: "\(error.message)")
             } else {
-                throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden: \(clientResponse.status), \(clientResponse.headers), \(ticketResponseBody), \(ticketResponseBody.count) -\(String(data: ticketResponseBody, encoding: .utf8) ?? "Fehler")-")
+                throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden: \(String(data: ticketResponseBody, encoding: .utf8) ?? "Fehler")")
             }
         }
         
