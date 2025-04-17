@@ -88,33 +88,39 @@ extension PluginRNV {
         let clientResponse = try await client.send(request: clientRequest)
         
         guard let ticketResponseBody = clientResponse.body else {
-            throw OEPNVWalletPluginError.parsingFailed(description: "Kein HTTP-Body vorhanden.")
+            throw OEPNVWalletPluginError.parsingFailed(description: "Kein HTTP-Body vorhanden: \(clientResponse.status), \(clientResponse.headers)")
         }
         
         guard let ticketResponseBodyJSON = try? JSONDecoder().decode(TicketResponseBody.self, from: ticketResponseBody) else {
             if let error = try? JSONDecoder().decode(APIError.self, from: ticketResponseBody) {
                 throw OEPNVWalletPluginError.authenticationFailed(description: "\(error.message)")
             } else {
-                throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden.")
+                throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden: \(String(data: ticketResponseBody, encoding: .utf8) ?? "Fehler")")
             }
         }
         
         guard let ticketData = ticketResponseBodyJSON.tickets[id] else {
-            throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden.")
+            throw OEPNVWalletPluginError.parsingFailed(description: "Ticket-ID nicht vorhanden: \(String(data: ticketResponseBody, encoding: .utf8) ?? "Fehler")")
         }
         
-        guard let metaDataRaw = ticketData.meta.data(using: .utf8),
-              let templateDataRaw = ticketData.template.data(using: .utf8) else {
-            throw OEPNVWalletPluginError.parsingFailed(description: "Umwandlung in Data nicht möglich.")
+        guard let metaDataRaw = ticketData.meta.data(using: .utf8) else {
+            throw OEPNVWalletPluginError.parsingFailed(description: "Umwandlung in Data nicht möglich: \(ticketData.meta)")
         }
         
-        guard let metaData = try? JSONDecoder().decode(TicketResponseMeta.self, from: metaDataRaw),
-              let templateData = try? JSONDecoder().decode(TicketResponseTemplate.self, from: templateDataRaw) else {
-            throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden.")
+        guard let templateDataRaw = ticketData.template.data(using: .utf8) else {
+            throw OEPNVWalletPluginError.parsingFailed(description: "Umwandlung in Data nicht möglich: \(ticketData.template)")
+        }
+        
+        guard let metaData = try? JSONDecoder().decode(TicketResponseMeta.self, from: metaDataRaw) else {
+            throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden: \(ticketData.meta)")
+        }
+        
+        guard let templateData = try? JSONDecoder().decode(TicketResponseTemplate.self, from: templateDataRaw) else {
+            throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden: \(ticketData.template)")
         }
         
         guard templateData.content.pages.count >= 1 else {
-            throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden.")
+            throw OEPNVWalletPluginError.parsingFailed(description: "Keine Pages vorhanden: \(ticketData.template)")
         }
         
         let firstPage = templateData.content.pages[0]
@@ -126,9 +132,12 @@ extension PluginRNV {
         let scanCodeStartMarker = "<img class='barcode' style='z-index: 100;' src='data:image/jpg;base64,"
         let scanCodeEndMarker = "'"
         
-        guard let name = firstPage.slice(from: nameStartMarker, to: nameEndMarker),
-              let scanCode = secondPage.slice(from: scanCodeStartMarker, to: scanCodeEndMarker) else {
-            throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden.")
+        guard let name = firstPage.slice(from: nameStartMarker, to: nameEndMarker) else {
+            throw OEPNVWalletPluginError.parsingFailed(description: "Name nicht gefunden: \(firstPage)")
+        }
+        
+        guard let scanCode = secondPage.slice(from: scanCodeStartMarker, to: scanCodeEndMarker) else {
+            throw OEPNVWalletPluginError.parsingFailed(description: "Scan-Code nicht gefunden: \(secondPage)")
         }
         
         let formatter = DateFormatter()
@@ -138,7 +147,7 @@ extension PluginRNV {
         
         guard let validFromDate = formatter.date(from: metaData.validity_begin),
               let validUntilDate = formatter.date(from: metaData.validity_end) else {
-            throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden.")
+            throw OEPNVWalletPluginError.parsingFailed(description: "Datum kann nicht umgewandelt werden: \(metaData.validity_begin) / \(metaData.validity_end)")
         }
         
         return TicketData(

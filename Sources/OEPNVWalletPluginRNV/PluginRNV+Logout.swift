@@ -52,14 +52,14 @@ extension PluginRNV {
         let clientResponse = try await client.send(request: clientRequest)
         
         guard let logoutResponseBody = clientResponse.body else {
-            throw OEPNVWalletPluginError.parsingFailed(description: "Kein HTTP-Body vorhanden.")
+            throw OEPNVWalletPluginError.parsingFailed(description: "Kein HTTP-Body vorhanden: \(clientResponse.status), \(clientResponse.headers)")
         }
                 
         guard let _ = try? JSONDecoder().decode([String].self, from: logoutResponseBody) else {
             if let error = try? JSONDecoder().decode(APIError.self, from: logoutResponseBody) {
                 throw OEPNVWalletPluginError.authenticationFailed(description: "\(error.message)")
             } else {
-                throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden.")
+                throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden: \(String(data: logoutResponseBody, encoding: .utf8) ?? "Fehler")")
             }
         }
         

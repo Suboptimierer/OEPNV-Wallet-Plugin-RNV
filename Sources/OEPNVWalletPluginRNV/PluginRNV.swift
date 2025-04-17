@@ -40,7 +40,7 @@ public struct PluginRNV: OEPNVWalletPlugin {
         } catch let error as OEPNVWalletPluginError {
             throw error
         } catch {
-            throw OEPNVWalletPluginError.underlyingFailed(error: error)
+            throw OEPNVWalletPluginError.underlyingFailed(description: error.localizedDescription)
         }
         
     }
@@ -74,7 +74,7 @@ public struct PluginRNV: OEPNVWalletPlugin {
         } catch let error as OEPNVWalletPluginError {
             throw error
         } catch {
-            throw OEPNVWalletPluginError.underlyingFailed(error: error)
+            throw OEPNVWalletPluginError.underlyingFailed(description: error.localizedDescription)
         }
         
     }

@@ -71,19 +71,19 @@ extension PluginRNV {
         let clientResponse = try await client.send(request: clientRequest)
         
         guard let loginResponseBody = clientResponse.body else {
-            throw OEPNVWalletPluginError.parsingFailed(description: "Kein HTTP-Body vorhanden.")
+            throw OEPNVWalletPluginError.parsingFailed(description: "Kein HTTP-Body vorhanden: \(clientResponse.status), \(clientResponse.headers)")
         }
                 
         guard let loginResponseBodyJSON = try? JSONDecoder().decode(LoginResponseBody.self, from: loginResponseBody) else {
             if let error = try? JSONDecoder().decode(APIError.self, from: loginResponseBody) {
                 throw OEPNVWalletPluginError.authenticationFailed(description: "\(error.message)")
             } else {
-                throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden.")
+                throw OEPNVWalletPluginError.parsingFailed(description: "Keine lesbare Antwort vorhanden: \(String(data: loginResponseBody, encoding: .utf8) ?? "Fehler")")
             }
         }
         
         guard let authorization = loginResponseBodyJSON.authorization_types.first else {
-            throw OEPNVWalletPluginError.parsingFailed(description: "Kein Auth-Token vorhanden.")
+            throw OEPNVWalletPluginError.parsingFailed(description: "Kein Auth-Token vorhanden: \(String(data: loginResponseBody, encoding: .utf8) ?? "Fehler")")
         }
         
         return LoginData(authToken: "\(authorization.header.type) \(authorization.header.value)")
