@@ -52,12 +52,8 @@ public struct PluginRNV: OEPNVWalletPlugin {
         }
         
         do {
-            var log = ""
             let loginData = try await login(with: email, and: password, using: client)
-            log.append("\(loginData.authToken) - ")
             let syncData = try await sync(auth: loginData.authToken, using: client)
-            log.append("\(syncData.ticketIds.joined(separator: ",")) - ")
-            throw OEPNVWalletPluginError.internalFailed(description: log)
             
             var pluginTickets = [OEPNVWalletPluginAPI.OEPNVWalletPluginTicket]()
             for id in syncData.ticketIds {
