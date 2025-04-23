@@ -76,7 +76,7 @@ public struct PluginRNV: OEPNVWalletPlugin {
                     validFrom: ticketData.validFrom,
                     validUntil: ticketData.validUntil,
                     holder: ticketData.holder,
-                    scanCode: .base64AztecCodeWithISO88591Message(ticketData.scanCode)
+                    barcode: .base64AztecCode(ticketData.aztecCode)
                 ))
             }
             

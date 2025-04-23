@@ -13,5 +13,5 @@ struct TicketData {
     let validFrom: Date
     let validUntil: Date
     let holder: String
-    let scanCode: String
+    let aztecCode: String
 }

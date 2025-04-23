@@ -129,15 +129,15 @@ extension PluginRNV {
         let nameStartMarker = "<p class='caps small-font label'>Vor & Nachname</p><p class='small-font'>"
         let nameEndMarker = "</p>"
         
-        let scanCodeStartMarker = "<img class='barcode' style='z-index: 100;' src='data:image/jpg;base64,"
-        let scanCodeEndMarker = "'"
+        let aztecCodeStartMarker = "<img class='barcode' style='z-index: 100;' src='data:image/jpg;base64,"
+        let aztecCodeEndMarker = "'"
         
         guard let name = firstPage.slice(from: nameStartMarker, to: nameEndMarker) else {
             throw OEPNVWalletPluginError.parsingFailed(description: "Name nicht gefunden: \(firstPage)")
         }
         
-        guard let scanCode = secondPage.slice(from: scanCodeStartMarker, to: scanCodeEndMarker) else {
-            throw OEPNVWalletPluginError.parsingFailed(description: "Scan-Code nicht gefunden: \(secondPage)")
+        guard let aztecCode = secondPage.slice(from: aztecCodeStartMarker, to: aztecCodeEndMarker) else {
+            throw OEPNVWalletPluginError.parsingFailed(description: "Aztec-Code nicht gefunden: \(secondPage)")
         }
         
         let formatter = DateFormatter()
@@ -156,7 +156,7 @@ extension PluginRNV {
             validFrom: validFromDate,
             validUntil: validUntilDate,
             holder: name,
-            scanCode: scanCode
+            aztecCode: aztecCode
         )
         
     }
